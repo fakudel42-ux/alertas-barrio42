@@ -44,7 +44,7 @@
     const messaging = getMessaging(app);
     Notification.requestPermission().then((permission) => {
       if (permission === 'granted') {
-        getToken(messaging, { vapidKey: 'TU_VAPID_KEY_DE_FIREBASE' }).then((currentToken) => {
+        getToken(messaging, { vapidKey: 'BIFsuvtcLM7850oYzjsDMWDZxnsd1rZyfZyvvr8LllB8Op6BS2eNfcp-K5wPeoJiTJIRi6S95aBJ8tpZrg49clo' }).then((currentToken) => {
           if (currentToken) {
             console.log("Token del vecino:", currentToken);
           }

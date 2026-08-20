@@ -18,10 +18,49 @@
   <h1>🚨 Alertas Barrio Km 42</h1>
   <p>Sistema Vecinal de Emergencias</p>
 
-  <button class="btn btn-moto" onclick="alert('Enviando alerta de Moto Sospechosa...')">🚨 MOTO SOSPECHOSA</button>
-  <button class="btn btn-robo" onclick="alert('Enviando alerta de ROBO...')">⚠️ ROBO / EMERGENCIA</button>
+  <button class="btn btn-moto" onclick="enviarAlerta('Sospechoso en Moto')">🛵 Sospechoso en Moto</button>
+  <button class="btn btn-robo" onclick="enviarAlerta('Robo / Emergencia')">🚨 Robo / Emergencia</button>
 
-  <p id="estado">App lista para conectar a Firebase</p>
+  <p id="estado">Conectando con el sistema...</p>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDfLOGH0iNMNxuq-7kdZq4-FcZ0...",
+      authDomain: "alertas-barrio42.firebaseapp.com",
+      projectId: "alertas-barrio42",
+      storageBucket: "alertas-barrio42.firebasestorage.app",
+      messagingSenderId: "311506369120",
+      appId: "1:311506369120:web:1b8367e87a55a232956105"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.enviarAlerta = async function(tipo) {
+      try {
+        await addDoc(collection(db, "mensajes"), {
+          texto: tipo,
+          fecha: new Date()
+        });
+        alert("Alerta enviada: " + tipo);
+      } catch (e) {
+        alert("Error al enviar: " + e.message);
+      }
+    };
+
+    const q = query(collection(db, "mensajes"), orderBy("fecha", "desc"), limit(1));
+    onSnapshot(q, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        if (change.type === "added") {
+          const data = change.doc.data();
+          document.getElementById("estado").innerText = "Última alerta: " + data.texto;
+        }
+      });
+    });
+  </script>
 
 </body>
 </html>

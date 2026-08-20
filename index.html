@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alertas Km 42</title>
   <style>
-    body { font-family: sans-serif; text-align: center; background: #121212; color: white; padding: 20px; }
+    body { font-family: sans-serif; text-align: center; padding: 20px; background: #121212; color: white; }
     h1 { color: #ff4d4d; }
-    .btn { display: block; width: 100%; padding: 20px; margin: 15px 0; font-size: 18px; font-weight: bold; border: none; border-radius: 10px; color: white; cursor: pointer; }
+    .btn { display: block; width: 100%; padding: 15px; margin: 10px 0; border: none; border-radius: 8px; color: white; font-size: 18px; font-weight: bold; cursor: pointer; }
     .btn-moto { background: #ff9800; }
     .btn-robo { background: #e53935; }
-    #estado { margin-top: 20px; font-weight: bold; color: #4cd137; }
+    #estado { margin-top: 20px; font-weight: bold; font-size: 16px; }
   </style>
 </head>
 <body>
@@ -26,6 +26,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDfLOGH0iNMNxuq-7kdZq4-FcZ0...",
@@ -39,6 +40,19 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // Activar Notificaciones Push
+    const messaging = getMessaging(app);
+    Notification.requestPermission().then((permission) => {
+      if (permission === 'granted') {
+        getToken(messaging, { vapidKey: 'TU_VAPID_KEY_DE_FIREBASE' }).then((currentToken) => {
+          if (currentToken) {
+            console.log("Token del vecino:", currentToken);
+          }
+        });
+      }
+    });
+
+    // Enviar alertas a Firestore
     window.enviarAlerta = async function(tipo) {
       try {
         await addDoc(collection(db, "mensajes"), {
@@ -51,6 +65,7 @@
       }
     };
 
+    // Escuchar última alerta
     const q = query(collection(db, "mensajes"), orderBy("fecha", "desc"), limit(1));
     onSnapshot(q, (snapshot) => {
       snapshot.docChanges().forEach((change) => {
@@ -61,6 +76,5 @@
       });
     });
   </script>
-
 </body>
 </html>

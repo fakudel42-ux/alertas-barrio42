@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alertas Km 42</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; background: #121212; color: white; padding: 20px; }
+    h1 { color: #ff4d4d; }
+    .btn { display: block; width: 100%; padding: 20px; margin: 15px 0; font-size: 18px; font-weight: bold; border: none; border-radius: 10px; color: white; cursor: pointer; }
+    .btn-moto { background: #ff9800; }
+    .btn-robo { background: #e53935; }
+    #estado { margin-top: 20px; font-weight: bold; color: #4cd137; }
+  </style>
+</head>
+<body>
+
+  <h1>🚨 Alertas Barrio Km 42</h1>
+  <p>Sistema Vecinal de Emergencias</p>
+
+  <button class="btn btn-moto" onclick="alert('Enviando alerta de Moto Sospechosa...')">🚨 MOTO SOSPECHOSA</button>
+  <button class="btn btn-robo" onclick="alert('Enviando alerta de ROBO...')">⚠️ ROBO / EMERGENCIA</button>
+
+  <p id="estado">App lista para conectar a Firebase</p>
+
+</body>
+</html>
